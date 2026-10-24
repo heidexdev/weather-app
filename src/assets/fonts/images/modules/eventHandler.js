@@ -4,9 +4,9 @@ const eventHandler = (function () {
   const searchBtn = document.querySelector(".search-btn");
 
   function searchListener() {
-    searchBtn.addEventListener("click", () => {
+    searchBtn.addEventListener("click", async () => {
       const locationName = searchInput.value;
-      const result = getData(locationName);
+      const result = await getData(locationName);
       console.log(result);
     });
   }
