@@ -1,3 +1,3 @@
 import "./styles.css";
-
-console.log("Webpack is working!");
+import eventHandler from "./assets/fonts/images/modules/eventHandler.js";
+eventHandler.searchListener();
