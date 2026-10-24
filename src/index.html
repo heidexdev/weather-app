@@ -6,9 +6,23 @@
     <title>Weather app</title>
   </head>
   <body>
-    <div class="container">
-      <input type="text" class="search">
-      <button class="search-btn">search</button>
-    </div>
+    <main class="app">
+      <h1 class="app__title">Weather</h1>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          class="search"
+          placeholder="Search a city…"
+          aria-label="City name"
+          autocomplete="off"
+        />
+        <button type="button" class="search-btn">Search</button>
+      </div>
+
+      <p class="status" role="status" aria-live="polite"></p>
+
+      <section class="weather" aria-live="polite"></section>
+    </main>
   </body>
 </html>
