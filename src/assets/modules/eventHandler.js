@@ -26,6 +26,15 @@ const eventHandler = (function () {
   function getLastResult() {
     return lastResult;
   }
-  return { searchListener, getLastResult };
+  const unitBtn = document.querySelector(".unit-toggle");
+
+  function unitListener() {
+    unitBtn.addEventListener("click", () => {
+      const next = unitBtn.textContent === "°C" ? "F" : "C";
+      ui.setUnit(next);
+    });
+  }
+
+  return { searchListener, unitListener, getLastResult };
 })();
 export default eventHandler;

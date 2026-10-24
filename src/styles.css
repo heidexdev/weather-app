@@ -397,3 +397,23 @@ body.is-loading .weather::after {
     animation-duration: 2s; /* slower, still visible */
   }
 }
+.unit-toggle {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+.unit-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.unit-toggle:active {
+  transform: scale(0.96);
+}

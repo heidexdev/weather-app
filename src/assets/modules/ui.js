@@ -4,6 +4,9 @@ const ui = (function () {
   const weatherEl = document.querySelector(".weather");
   const statusEl = document.querySelector(".status");
 
+  /* ---------- unit state (display-only) ---------- */
+  let unit = "C"; // "C" or "F"
+
   /* Visual Crossing icon names -> emoji */
   const ICONS = {
     "clear-day": "☀️",
@@ -33,9 +36,9 @@ const ui = (function () {
     return node;
   }
 
-  function num(value, digits = 0, unit = "") {
+  function num(value, digits = 0, unitSuffix = "") {
     const n = Number(value);
-    return Number.isFinite(n) ? `${n.toFixed(digits)}${unit}` : "—";
+    return Number.isFinite(n) ? `${n.toFixed(digits)}${unitSuffix}` : "—";
   }
 
   /* "17:00:00" -> "17:00" */
@@ -64,6 +67,21 @@ const ui = (function () {
     statusEl.classList.toggle("status--error", Boolean(message) && isError);
   }
 
+  /* ---------- temperature conversion (display-only) ---------- */
+
+  function convert(celsius, targetUnit) {
+    const n = Number(celsius);
+    if (!Number.isFinite(n)) return null;
+    return targetUnit === "F" ? (n * 9) / 5 + 32 : n;
+  }
+
+  /* Returns a string like "22°C" / "72°F", or "—" for bad input. */
+  function temp(value, digits = 0) {
+    const v = convert(value, unit);
+    if (v === null) return "—";
+    return `${v.toFixed(digits)}°${unit}`;
+  }
+
   /* ---------- card builders ---------- */
 
   function buildCurrentCard(data) {
@@ -83,14 +101,12 @@ const ui = (function () {
     const head = create("header", "card__head");
     head.append(heading, create("span", "icon", emoji(current.icon)));
 
-    const temp = create("p", "temp");
-    temp.append(
-      create("span", "temp__value", num(current.temp, 0)),
-      create("span", "temp__unit", "°C"),
-    );
+    // Unit is now part of temp(), so no separate temp__unit span.
+    const tempEl = create("p", "temp");
+    tempEl.append(create("span", "temp__value", temp(current.temp)));
 
     const main = create("div", "current__main");
-    main.append(temp, create("p", "conditions", current.conditions ?? "—"));
+    main.append(tempEl, create("p", "conditions", current.conditions ?? "—"));
 
     const stats = create("ul", "stats");
     stats.append(
@@ -118,9 +134,9 @@ const ui = (function () {
 
     const stats = create("ul", "stats");
     stats.append(
-      stat("High", num(today.tempmax, 0, "°")),
-      stat("Low", num(today.tempmin, 0, "°")),
-      stat("Average", num(today.temp, 0, "°")),
+      stat("High", temp(today.tempmax)),
+      stat("Low", temp(today.tempmin)),
+      stat("Average", temp(today.temp)),
       stat("Humidity", num(today.humidity, 0, "%")),
       stat("Precip", num(today.precipprob, 0, "%")),
       stat("Wind", num(today.windspeed, 1, " km/h")),
@@ -145,7 +161,6 @@ const ui = (function () {
   /* ---------- public API ---------- */
 
   function render(passedData) {
-    // Works with eventHandler's ui.render() call, but also allows ui.render(data).
     const data = passedData ?? eventHandler.getLastResult();
 
     const valid =
@@ -166,6 +181,7 @@ const ui = (function () {
     setStatus("");
     weatherEl.replaceChildren(buildCurrentCard(data), buildTodayCard(data));
   }
+
   function setLoading(isLoading) {
     document.body.classList.toggle("is-loading", isLoading);
     const btn = document.querySelector(".search-btn");
@@ -173,7 +189,19 @@ const ui = (function () {
     const input = document.querySelector(".search");
     if (input) input.disabled = isLoading;
   }
-  return { render, setLoading };
+
+  /* Switch unit and re-render from the last data — NO new fetch. */
+  function setUnit(nextUnit) {
+    unit = nextUnit === "F" ? "F" : "C";
+
+    const btn = document.querySelector(".unit-toggle");
+    if (btn) btn.textContent = unit === "C" ? "°C" : "°F";
+
+    // Only re-render if we already have data (avoid showing error on first toggle)
+    if (eventHandler.getLastResult()) render();
+  }
+
+  return { render, setLoading, setUnit };
 })();
 
 export default ui;
