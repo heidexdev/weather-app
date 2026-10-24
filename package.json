@@ -1,5 +1,5 @@
 {
-  "name": "webpack-template",
+  "name": "weather-app",
   "version": "1.0.0",
   "description": "Vanilla JavaScript Webpack project template",
   "scripts": {
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heidexdev/webpack-template.git"
+    "url": "git+https://github.com/heidexdev/weather-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/heidexdev/webpack-template/issues"
+    "url": "https://github.com/heidexdev/weather-app/issues"
   },
-  "homepage": "https://github.com/heidexdev/webpack-template#readme",
+  "homepage": "https://github.com/heidexdev/weather-app#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "css-loader": "^7.1.5",
