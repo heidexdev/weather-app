@@ -8,13 +8,20 @@ const eventHandler = (function () {
     searchBtn.addEventListener("click", callGetData);
   }
   let lastResult = null;
+
   async function callGetData() {
-    const locationName = searchInput.value;
-    const result = await getData(locationName);
-    searchInput.value = "";
-    lastResult = result;
-    console.log(result);
-    ui.render();
+    const locationName = searchInput.value.trim();
+    if (!locationName) return; // ignore empty search
+
+    ui.setLoading(true); // ← show spinner
+    try {
+      const result = await getData(locationName);
+      lastResult = result;
+      ui.render(); // render handles undefined → error state
+    } finally {
+      ui.setLoading(false); // ← hide spinner no matter what
+      searchInput.value = "";
+    }
   }
   function getLastResult() {
     return lastResult;

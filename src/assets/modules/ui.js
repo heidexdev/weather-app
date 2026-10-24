@@ -166,8 +166,14 @@ const ui = (function () {
     setStatus("");
     weatherEl.replaceChildren(buildCurrentCard(data), buildTodayCard(data));
   }
-
-  return { render };
+  function setLoading(isLoading) {
+    document.body.classList.toggle("is-loading", isLoading);
+    const btn = document.querySelector(".search-btn");
+    if (btn) btn.disabled = isLoading;
+    const input = document.querySelector(".search");
+    if (input) input.disabled = isLoading;
+  }
+  return { render, setLoading };
 })();
 
 export default ui;
